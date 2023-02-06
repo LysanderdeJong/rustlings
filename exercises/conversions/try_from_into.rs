@@ -23,8 +23,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
 // You need to create an implementation for a tuple of three integers,
@@ -38,6 +36,37 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let check: Vec<bool> = Vec::new();
+        let (red, green, blue) = tuple;
+        if red >=0 & red < 256 {
+            check.push(true)
+        } else {
+            check.push(false)
+        }
+
+        if green >=0 & green < 256 {
+            check.push(true)
+        } else {
+            check.push(false)
+        }
+
+        if blue >=0 & blue < 256 {
+            check.push(true)
+        } else {
+            check.push(false)
+        }
+
+        let check = check.iter().fold(true, |a, b| a & b);
+
+        if !check {
+            Err(IntoColorError::IntConversion)
+        } else {
+            Ok(Color {
+                blue: blue.into(),
+                red: red.into(),
+                green: green.into(),
+            })
+        }
     }
 }
 
@@ -45,6 +74,19 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let check = arr
+            .iter()
+            .map(|x| if (x >= 0) & (x < 256) { true } else { false })
+            .fold::<bool>(true, |a, b| a & b);
+        if !check {
+            Err(IntoColorError::IntConversion)
+        } else {
+            Ok(Color {
+                red: arr[0].into(),
+                green: arr[1].into(),
+                blue: arr[2].into(),
+            })
+        }
     }
 }
 
@@ -52,6 +94,22 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            Err(IntoColorError::BadLen)
+        }
+        let check = slice
+            .iter()
+            .map(|x| if (x >= 0) & (x < 256) { true } else { false })
+            .fold::<bool>(true, |a, b| a & b);
+        if !check {
+            Err(IntoColorError::IntConversion)
+        } else {
+            Ok(Color {
+                red: slice[0].into(),
+                green: slice[1].into(),
+                blue: slice[2].into(),
+            })
+        }
     }
 }
 
