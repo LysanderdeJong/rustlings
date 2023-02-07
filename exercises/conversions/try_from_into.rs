@@ -36,21 +36,21 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
-        let check: Vec<bool> = Vec::new();
+        let mut check: Vec<bool> = Vec::new();
         let (red, green, blue) = tuple;
-        if red >=0 & red < 256 {
+        if (red >= 0) & (red < 256) {
             check.push(true)
         } else {
             check.push(false)
         }
 
-        if green >=0 & green < 256 {
+        if (green >= 0) & (green < 256) {
             check.push(true)
         } else {
             check.push(false)
         }
 
-        if blue >=0 & blue < 256 {
+        if (blue >= 0) & (blue < 256) {
             check.push(true)
         } else {
             check.push(false)
@@ -62,9 +62,9 @@ impl TryFrom<(i16, i16, i16)> for Color {
             Err(IntoColorError::IntConversion)
         } else {
             Ok(Color {
-                blue: blue.into(),
-                red: red.into(),
-                green: green.into(),
+                blue: blue as u8,
+                red: red as u8,
+                green: green as u8,
             })
         }
     }
@@ -76,15 +76,15 @@ impl TryFrom<[i16; 3]> for Color {
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
         let check = arr
             .iter()
-            .map(|x| if (x >= 0) & (x < 256) { true } else { false })
-            .fold::<bool>(true, |a, b| a & b);
+            .map(|x| if (x >= &0) & (x < &256) { true } else { false })
+            .fold(true, |a, b| a & b);
         if !check {
             Err(IntoColorError::IntConversion)
         } else {
             Ok(Color {
-                red: arr[0].into(),
-                green: arr[1].into(),
-                blue: arr[2].into(),
+                red: arr[0] as u8,
+                green: arr[1] as u8,
+                blue: arr[2] as u8,
             })
         }
     }
@@ -95,19 +95,19 @@ impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
         if slice.len() != 3 {
-            Err(IntoColorError::BadLen)
+            return Err(IntoColorError::BadLen);
         }
         let check = slice
             .iter()
-            .map(|x| if (x >= 0) & (x < 256) { true } else { false })
-            .fold::<bool>(true, |a, b| a & b);
+            .map(|x| if (x >= &0) & (x < &256) { true } else { false })
+            .fold(true, |a, b| a & b);
         if !check {
             Err(IntoColorError::IntConversion)
         } else {
             Ok(Color {
-                red: slice[0].into(),
-                green: slice[1].into(),
-                blue: slice[2].into(),
+                red: slice[0] as u8,
+                green: slice[1] as u8,
+                blue: slice[2] as u8,
             })
         }
     }
